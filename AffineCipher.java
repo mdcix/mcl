@@ -6,15 +6,11 @@ public class AffineCipher {
         StringBuilder ciphertext = new StringBuilder();
 
         for (char ch : plaintext.toCharArray()) {
-            if (Character.isLetter(ch)) {
-                char base = Character.isUpperCase(ch) ? 'A' : 'a';
-                int x = ch - base;
-                int encryptedX = (a * x + b) % 26;
-                char encryptedChar = (char) (encryptedX + base);
-                ciphertext.append(encryptedChar);
-            } else {
-                ciphertext.append(ch);
-            }
+            char base = Character.isUpperCase(ch) ? 'A' : 'a';
+            int x = ch - base;
+            int encryptedX = (a * x + b) % 26;
+            char encryptedChar = (char) (encryptedX + base);
+            ciphertext.append(encryptedChar);
         }
         return ciphertext.toString();
     }
