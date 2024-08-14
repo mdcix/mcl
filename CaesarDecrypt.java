@@ -1,10 +1,11 @@
 import java.util.Scanner;
-public class CaesarCipherEncryption {
+
+public class CaesarDecrypt {
     public static String encrypt(String plaintext, int shift) {
         StringBuilder encrypted = new StringBuilder();
         for (char c : plaintext.toCharArray()) {
             char base = Character.isUpperCase(c) ? 'A' : 'a';
-            encrypted.append((char) ((c - base + shift) % 26 + base));
+            encrypted.append((char) ((c - base - shift + 26) % 26 + base));
         }
         return encrypted.toString();
     }
