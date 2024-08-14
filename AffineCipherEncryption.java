@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class AffineCipher {
+public class AffineCipherEncryption {
 
     public static String encrypt(String plaintext, int a, int b) {
         StringBuilder ciphertext = new StringBuilder();
