@@ -1,5 +1,3 @@
-//RSA
-//RSA
 import java.math.BigInteger;
 
 public class RSA {
