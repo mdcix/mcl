@@ -1,4 +1,3 @@
-//Chinese Remainder Theorem
 import java.util.Scanner;
 
 public class ChineseRemainderTheorem {

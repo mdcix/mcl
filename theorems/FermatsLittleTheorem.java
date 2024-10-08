@@ -1,5 +1,3 @@
-//Fermat’s little theorem
-
 import java.util.Scanner;
 
 public class FermatsLittleTheorem {

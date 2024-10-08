@@ -1,4 +1,3 @@
-//Euler's Theorem
 import java.math.BigInteger;
 import java.util.Scanner;
 

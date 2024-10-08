@@ -1,4 +1,3 @@
-//Extended Euclidean Algo
 import java.util.Scanner;
 
 public class ExtendedEuclidean {
