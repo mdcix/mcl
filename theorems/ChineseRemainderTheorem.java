@@ -2,74 +2,95 @@ import java.util.Scanner;
 
 public class ChineseRemainderTheorem {
 
-    // Function to compute the modular inverse using Extended Euclidean Algorithm
-    public static long modularInverse(long a, long m) {
-        long[] result = extendedGCD(a, m);
-        long gcd = result[0];
-        long x = result[1];
-        if (gcd != 1) {
-            throw new ArithmeticException("No modular inverse exists.");
-        }
-        return (x % m + m) % m;
+    // Function to find the GCD of two numbers
+    public static int gcd(int a, int b) {
+        return (b == 0) ? a : gcd(b, a % b);
     }
 
-    // Extended Euclidean Algorithm to find the GCD and coefficients
-    private static long[] extendedGCD(long a, long b) {
-        if (b == 0) {
-            return new long[]{a, 1, 0};
+    // Function to find the modular inverse of a under modulo m using the Extended Euclidean Algorithm
+    public static int modInverse(int a, int m) {
+        int m0 = m, t, q;
+        int x0 = 0, x1 = 1;
+
+        if (m == 1)
+            return 0;
+
+        // Apply the extended Euclid algorithm
+        while (a > 1) {
+            // q is quotient
+            q = a / m;
+            t = m;
+
+            // m is remainder now, process same as Euclid's algorithm
+            m = a % m;
+            a = t;
+            t = x0;
+
+            x0 = x1 - q * x0;
+            x1 = t;
         }
-        long[] result = extendedGCD(b, a % b);
-        long gcd = result[0];
-        long x1 = result[1];
-        long y1 = result[2];
-        long x = y1;
-        long y = x1 - (a / b) * y1;
-        return new long[]{gcd, x, y};
+
+        // Make x1 positive
+        if (x1 < 0)
+            x1 += m0;
+
+        return x1;
     }
 
-    // Function to solve the system of congruences using the Chinese Remainder Theorem
-    public static long chineseRemainder(long[] a, long[] m) {
-        long M = 1;
-        for (long mod : m) {
-            M *= mod;
+    // Function to implement the Chinese Remainder Theorem
+    public static int chineseRemainderTheorem(int[] num, int[] rem, int k) {
+        int prod = 1; // Product of all numbers
+        for (int i = 0; i < k; i++)
+            prod *= num[i];
+
+        int result = 0;
+
+        // Apply the CRT
+        for (int i = 0; i < k; i++) {
+            int pp = prod / num[i]; // Product of all numbers divided by num[i]
+            result += rem[i] * modInverse(pp, num[i]) * pp;
         }
 
-        long x = 0;
-        for (int i = 0; i < a.length; i++) {
-            long ai = a[i];
-            long mi = m[i];
-            long Mi = M / mi;
-            long invMi = modularInverse(Mi, mi);
-            x = (x + ai * Mi * invMi) % M;
-        }
-        return (x + M) % M; // Ensure result is non-negative
+        return result % prod; // Return the result modulo prod
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Read number of congruences
-        System.out.print("Enter number of congruences: ");
+        // Input the number of equations
+        System.out.print("Enter the number of equations: ");
         int k = scanner.nextInt();
 
-        long[] a = new long[k];
-        long[] m = new long[k];
+        int[] num = new int[k];
+        int[] rem = new int[k];
 
-        // Read congruences
+        // Input the moduli and the remainders
+        System.out.println("Enter the moduli:");
         for (int i = 0; i < k; i++) {
-            System.out.print("Enter a" + (i + 1) + ": ");
-            a[i] = scanner.nextLong();
-            System.out.print("Enter m" + (i + 1) + ": ");
-            m[i] = scanner.nextLong();
+            System.out.print("num[" + i + "]: ");
+            num[i] = scanner.nextInt();
         }
 
-        // Solve the system of congruences
-        try {
-            long result = chineseRemainder(a, m);
-            System.out.println("The solution is: " + result);
-        } catch (ArithmeticException e) {
-            System.out.println("Error: " + e.getMessage());
+        System.out.println("Enter the remainders:");
+        for (int i = 0; i < k; i++) {
+            System.out.print("rem[" + i + "]: ");
+            rem[i] = scanner.nextInt();
         }
+
+        // Check for pairwise coprime
+        for (int i = 0; i < k; i++) {
+            for (int j = i + 1; j < k; j++) {
+                if (gcd(num[i], num[j]) != 1) {
+                    System.out.println("The moduli must be pairwise coprime.");
+                    scanner.close();
+                    return;
+                }
+            }
+        }
+
+        // Calculate the result using CRT
+        int result = chineseRemainderTheorem(num, rem, k);
+        System.out.println("The solution x is: " + result);
 
         scanner.close();
     }
